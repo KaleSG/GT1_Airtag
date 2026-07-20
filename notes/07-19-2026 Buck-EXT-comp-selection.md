@@ -18,3 +18,21 @@ D = 3V / 48V = t_onmin / t_period
 
 1/t_period = 0.0625 / 142 ns
 F = 440140.84507 (440 kHz)
+
+### Inductor Selection
+We assume K_ind to be .3 as it is the industry standard for typical use cases. High power management is not critical here as power consumption is quite low in the Samsung SmartTag2
+
+<img src="img/Eq-26-Inductor.png" width="700" alt="Simplied Schematic">
+
+L_O(min) = ([54.6V - 3V] / [5.5A * .3]) * (3V / [54.6V * 440 kHz])
+
+= 0.00000390518 H
+= 3.90518 µH
+~= 3.9 µH
+
+To achieve the minimum Inductor Size required at this frequency, a **4.7 nH** inductor with an 0805 package is used.
+
+The 0805 standard is chosen out of personal preference.
+
+### Output Capacitor Selection
+<img src="img/output-cap-eq.png" width="700" alt="Simplied Schematic">
