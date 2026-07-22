@@ -10,17 +10,20 @@ MAX_V_IN = 60 # Volts
 MOSFET_ON_RESISTANCE_MILLIOHMS = 92 # mOhms (typical)
 MAX_CONTINUOUS_CURRENT = 3.5 # Amps
 MINIMUM_PEAK_INDUCTOR_CURRENT_LIMIT = 4.5 # A
-T_MIN_ON = 135 # ns
 
-# CONFIGURABLE MIN/MAXES
+
 MINIMUM_SWITCHING_FREQUENCY = 100000 # Hz
 MAXIMUM_SWITCHING_FREQUENCY = 25000000 # HZ
-DEFAULT_UVLO_VOLTAGE = 4.3
+T_MIN_ON = 135 # ns
+
+# Configurable Mins/Maxed
+UVLO_VOLTAGE = 4.3 # Volts ( Default is 4.3 volts )
 
 # Safety Margins
 V_IN_MARGIN = .1
 I_OUT_MAX_MARGIN = .15
 T_MIN_ON_MARGIN = .1
+MAX_K_IND_RATIO = .3
 
 
 
@@ -28,10 +31,9 @@ from helpers import *
 
 def computeComponentValues(v_in_nominal: float, v_in_max:float, v_out: float, i_out_max: float, catch_diode_voltage: float = .7):
     safe_t_min_on = computeMarginedValue(T_MIN_ON,T_MIN_ON_MARGIN)
-
-    # Compute Goal Switching Frequency
+    target_switch_speed = computeOptimalSwitchingSpeed(v_in_nominal,v_out,safe_t_min_on)
     
-    # Compute Inductor Value
+    # Compute Minimum Viable Inductor Value
 
     # Compute Output Capacitor Value
 
@@ -53,5 +55,8 @@ def computeComponentValues(v_in_nominal: float, v_in_max:float, v_out: float, i_
 # F = v_out / ( v_in * t_min_on )
 # note: t_min_on is in nanoseconds
 def computeOptimalSwitchingSpeed(v_in, v_out, t_min_on):
-    t_min_on_seconds = t_min_on * pow(10,9)
-    return v_out / ( v_in * t_min_on)
+    t_min_on_seconds = t_min_on * pow(10,-9)
+    return round(v_out / ( v_in * t_min_on_seconds))
+
+def computeMinInductorValue(v_in_max,v_out, i_out_max, switch_frequency):
+    return
